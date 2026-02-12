@@ -8,9 +8,11 @@
 
 QTableWidgetItem *createAnItem(Student *stu,int subIndex,int examIndex);
 QTableWidgetItem *createAnItem(Subject *subject);
-Subject text2Sub(QString text);
+Subject text2Sub(QString text,bool *ok);
 QString sub2Text(Subject *subject);
-void setItemColor(QTableWidgetItem *item);
+bool checkText2Sub(QString text);
+void setItemColor(QTableWidgetItem *item,Subject *sub);
 QStringList getStudentNames(Database *db);
+QString getFileText(QString path);
 
 #endif // UTILS_H

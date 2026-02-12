@@ -2,6 +2,8 @@
 
 #include "utils.h"
 
+#include "QMessageBox"
+
 QString ExamEditorTable::getItemText(int row,int column)
 {
     return item(row,column)->text();
@@ -31,7 +33,14 @@ void ExamEditor::getNewExam()
         Exam exam;
         for(int i2=0;i2<database->subjects.count();i2++)
         {
-            exam.subjects.push_back(text2Sub(table->getItemText(i2,i1)));
+            bool ok=false;
+            Subject newSub = text2Sub(table->getItemText(i2,i1),&ok);
+            if(!ok)
+            {
+                QMessageBox::warning(this, tr("Error"), tr("Could not convert"));
+                return;
+            }
+            exam.subjects.push_back(newSub);
         }
         database->students[i1].exams.push_back(exam);
     }

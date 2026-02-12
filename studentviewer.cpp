@@ -2,13 +2,22 @@
 
 #include "utils.h"
 
+#include <QMessageBox>
+
 void StudentTable::m_dataChanged(int row,int column)
 {
     QString newText = item(row,column)->text();
     if(sub2Text(&database->students[index].exams[row].subjects[column]) == newText)
         return;
-    database->f_dataChanged(index,row,column,text2Sub(newText));
-    setItemColor(item(row,column));
+    bool ok=false;
+    Subject newSub = text2Sub(newText,&ok);
+    if(!ok)
+    {
+        QMessageBox::warning(this, tr("Error"), tr("Could not convert"));
+        return;
+    }
+    database->f_dataChanged(index,row,column,newSub);
+    setItemColor(item(row,column),&newSub);
 }
 
 StudentTable::StudentTable(Database *db,int setIndex,QWidget *parent)
@@ -50,14 +59,8 @@ StudentViewer::StudentViewer(Database *db,QWidget *parent)
     database = db;
 
     QVBoxLayout *layout = new QVBoxLayout(this);
-
-    toolbar = new QToolBar("",this);
-    toolbar->setMovable(false);
-
-    QToolButton *btn = new QToolButton(this);
-    btn->setText("close");
-    connect(btn,&QToolButton::clicked,this,&QWidget::close);
-    toolbar->addWidget(btn);
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSpacing(0);
 
     tab = new QTabWidget(this);
     for(int i1=0;i1<database->students.size();i1++)
@@ -66,7 +69,6 @@ StudentViewer::StudentViewer(Database *db,QWidget *parent)
         tab->setTabToolTip(i1,database->students[i1].id);
     }
 
-    layout->addWidget(toolbar);
     layout->addWidget(tab);
     setLayout(layout);
 }
