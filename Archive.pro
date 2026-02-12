@@ -41,3 +41,15 @@ HEADERS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+RC_FILE = logo.rc
+
+VERSION = 0.2026.2.12
+QMAKE_TARGET_COMPANY = szy
+QMAKE_TARGET_DESCRIPTION = StudentExamManagementSystem
+QMAKE_TARGET_COPYRIGHT = Copyright(C) 2025
+QMAKE_TARGET_PRODUCT = BlondeArchive
+RC_LANG = 0x0800
+
+RESOURCES += \
+    logo.qrc

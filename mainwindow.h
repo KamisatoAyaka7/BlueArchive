@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 
+#include <QLabel>
+
 #include "database.h"
 
 class MainWindow : public QMainWindow
@@ -18,6 +20,8 @@ public:
     QToolBar *toolbar;
 
 private:
+    void resizeEvent(QResizeEvent *event);
+
     template<typename viewerType>
     void showWidget();
 
@@ -37,6 +41,8 @@ private:
     void readData();
 
     void createMenuToolBar();
+    void bindShortCuts();
+    void createStatusBar();
 
     bool init();
 };

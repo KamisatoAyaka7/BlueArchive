@@ -34,7 +34,6 @@ public:
     ExamViewer(Database *db,QWidget *parent = nullptr);
 
     Database *database;
-    QToolBar *toolbar;
     QTabWidget *tab;
 };
 

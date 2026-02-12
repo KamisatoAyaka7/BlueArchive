@@ -10,6 +10,8 @@
 
 #include "confirmbox.h"
 
+#include "utils.h"
+
 #include <QDir>
 #include <QCoreApplication>
 #include <QToolButton>
@@ -20,6 +22,11 @@
 #include <QMenu>
 #include <QAction>
 #include <QToolButton>
+#include <QTextBrowser>
+#include <QShortcut>
+#include <QStatusBar>
+
+#define PATH QCoreApplication::applicationDirPath()
 
 bool MainWindow::init()
 {
@@ -29,7 +36,11 @@ bool MainWindow::init()
 
 void MainWindow::saveData()
 {
-    database->writeAll();
+    qDebug()<<1;
+    if(database->writeAll())
+    {
+        statusBar()->showMessage("Saved successfully",2000);
+    }
 }
 
 void MainWindow::readData()
@@ -43,6 +54,7 @@ void MainWindow::showWidget()
     if(centralWidget()!=nullptr)
         centralWidget()->close();
     viewerType *viewer = new viewerType(database,this);
+    viewer->setContentsMargins(0, 0, 0, 0);
     setCentralWidget(viewer);
     viewer->show();
 }
@@ -138,6 +150,13 @@ void MainWindow::createMenuToolBar()
         QAction *viewSub = viewMenu->addAction("ViewSubjects");
         connect(viewSub,&QAction::triggered,this,&MainWindow::showSubjectViewer);
 
+        viewMenu->addSeparator();
+        QAction *closeAll = viewMenu->addAction("CloseAll");
+        connect(closeAll,&QAction::triggered,this,[=](){
+            if(centralWidget()!=nullptr)
+                centralWidget()->close();
+        });
+
         QToolButton *viewBtn = new QToolButton(this);
         viewBtn->setMenu(viewMenu);
         viewBtn->setPopupMode(QToolButton::InstantPopup);
@@ -176,10 +195,23 @@ void MainWindow::createMenuToolBar()
         QMenu *aboutMenu = new QMenu("about",this);
 
         QAction *aboutAction = aboutMenu->addAction("About");
-        //connect();
+        connect(aboutAction,&QAction::triggered,this,[=](){
+            QTextBrowser *broswer = new QTextBrowser(this);
+            if(centralWidget()!=nullptr)
+                centralWidget()->close();
+            broswer->setText(getFileText(QDir::cleanPath(PATH+"/data/about.txt")));
+            setCentralWidget(broswer);
+            broswer->show();
+        });
 
         QAction *helpAction = aboutMenu->addAction("Help");
-        //connnect();
+        connect(helpAction,&QAction::triggered,this,[=](){
+            QTextBrowser *broswer = new QTextBrowser(this);
+            if(centralWidget()!=nullptr)
+                centralWidget()->close();
+            broswer->setText(getFileText(QDir::cleanPath(PATH+"/data/help.txt")));
+            setCentralWidget(broswer);
+        });
 
         QToolButton *aboutBtn = new QToolButton(this);
         aboutBtn->setMenu(aboutMenu);
@@ -187,7 +219,43 @@ void MainWindow::createMenuToolBar()
         aboutBtn->setPopupMode(QToolButton::InstantPopup);
         toolbar->addWidget(aboutBtn);
     }
+}
 
+void MainWindow::resizeEvent(QResizeEvent *event)
+{
+    QMainWindow::resizeEvent(event);
+
+    QPixmap pixmap(PATH+"/data/bg.png");
+    QPalette palette = this->palette();
+    palette.setBrush(QPalette::Window,
+                     QBrush(pixmap.scaled(this->size(),
+                                          Qt::IgnoreAspectRatio,
+                                          Qt::SmoothTransformation)));
+    this->setPalette(palette);
+}
+
+void MainWindow::bindShortCuts()
+{
+    QShortcut *saveShortCut = new QShortcut(QKeySequence::Save,this);
+    connect(saveShortCut,&QShortcut::activated,this,&MainWindow::saveData);
+
+    QShortcut *readShortCut = new QShortcut(QKeySequence("Ctrl+r"),this);
+    connect(readShortCut,&QShortcut::activated,this,&MainWindow::readData);
+
+    QShortcut *helpShortCut = new QShortcut(QKeySequence("F1"),this);
+    connect(helpShortCut,&QShortcut::activated,this,[=](){
+            QTextBrowser *broswer = new QTextBrowser(this);
+            if(centralWidget()!=nullptr)
+                centralWidget()->close();
+            broswer->setText(getFileText(QDir::cleanPath(PATH+"/data/help.txt")));
+            setCentralWidget(broswer);
+    });
+}
+
+void MainWindow::createStatusBar()
+{
+    statusBar()->showMessage(tr("Ready"),2000);
+    statusBar()->setSizeGripEnabled(false);
 }
 
 MainWindow::MainWindow(QString setPath,QWidget *parent)
@@ -200,6 +268,11 @@ MainWindow::MainWindow(QString setPath,QWidget *parent)
         close();
     }
     createMenuToolBar();
+    createStatusBar();
+
+    setWindowIcon(QIcon("://logo.ico"));
+    setFont(QFont("Monospace",12,1));
+    resize(800,450);
 }
 
 MainWindow::~MainWindow() {}

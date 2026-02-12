@@ -2,6 +2,8 @@
 
 #include "utils.h"
 
+#include "QMessageBox"
+
 ExamTable::ExamTable(Database *db,int setIndex,QWidget *parent)
 {
     setParent(parent);
@@ -35,8 +37,15 @@ void ExamTable::m_dataChanged(int row,int column)
     QString newText = item(row,column)->text();
     if(sub2Text(&database->students[column].exams[index].subjects[row])==newText)
         return;
-    database->f_dataChanged(column,index,row,text2Sub(newText));
-    setItemColor(item(row,column));
+    bool ok=false;
+    Subject newSub = text2Sub(newText,&ok);
+    if(!ok)
+    {
+        QMessageBox::warning(this, tr("Error"), tr("Could not convert"));
+        return;
+    }
+    database->f_dataChanged(column,index,row,newSub);
+    setItemColor(item(row,column),&newSub);
 }
 
 ExamViewer::ExamViewer(Database *db,QWidget *parent)
@@ -45,14 +54,12 @@ ExamViewer::ExamViewer(Database *db,QWidget *parent)
     database = db;
 
     QVBoxLayout *layout = new QVBoxLayout(this);
-
-    toolbar = new QToolBar("",this);
-    toolbar->setMovable(false);
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSpacing(0);
 
     QToolButton *btn = new QToolButton(this);
     btn->setText("close");
     connect(btn,&QToolButton::clicked,this,&QWidget::close);
-    toolbar->addWidget(btn);
 
     tab = new QTabWidget(this);
     for(int i1=0;i1<database->exams.count();i1++)
@@ -60,7 +67,6 @@ ExamViewer::ExamViewer(Database *db,QWidget *parent)
         tab->addTab(new ExamTable(database,i1,this),database->exams[i1]);
     }
 
-    layout->addWidget(toolbar);
     layout->addWidget(tab);
     setLayout(layout);
 }

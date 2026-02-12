@@ -2,6 +2,8 @@
 
 #include "utils.h"
 
+#include <QMessageBox>
+
 SubjectTable::SubjectTable(Database *db,int setIndex,QWidget *parent)
 {
     setParent(parent);
@@ -36,8 +38,15 @@ void SubjectTable::m_dataChanged(int row,int column)
     QString newText = item(row,column)->text();
     if(sub2Text(&database->students[column].exams[row].subjects[index])==newText)
         return;
-    database->f_dataChanged(column,row,index,text2Sub(newText));
-    setItemColor(item(row,column));
+    bool ok=false;
+    Subject newSub = text2Sub(newText,&ok);
+    if(!ok)
+    {
+        QMessageBox::warning(this, tr("Error"), tr("Could not convert"));
+        return;
+    }
+    database->f_dataChanged(column,row,index,newSub);
+    setItemColor(item(row,column),&newSub);
 }
 
 SubjectViewer::SubjectViewer(Database *db,QWidget *parent)
@@ -46,14 +55,12 @@ SubjectViewer::SubjectViewer(Database *db,QWidget *parent)
     database = db;
 
     QVBoxLayout *layout = new QVBoxLayout(this);
-
-    toolbar = new QToolBar("",this);
-    toolbar->setMovable(false);
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSpacing(0);
 
     QToolButton *btn = new QToolButton(this);
     btn->setText("close");
     connect(btn,&QToolButton::clicked,this,&QWidget::close);
-    toolbar->addWidget(btn);
 
     tab = new QTabWidget(this);
     for(int i1=0;i1<database->subjects.count();i1++)
@@ -61,7 +68,6 @@ SubjectViewer::SubjectViewer(Database *db,QWidget *parent)
         tab->addTab(new SubjectTable(database,i1,this),database->subjects[i1]);
     }
 
-    layout->addWidget(toolbar);
     layout->addWidget(tab);
     setLayout(layout);
 }

@@ -15,6 +15,7 @@ int main(int argc, char *argv[])
         QString mainPath = QDir::cleanPath(QCoreApplication::applicationDirPath()+"/data/"+ad.toSelectedClass());
         ad.close();
         MainWindow w(mainPath);
+        w.setWindowOpacity(0.9);
         w.show();
         return a.exec();
     }

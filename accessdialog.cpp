@@ -43,6 +43,8 @@ void AccessDialog::createNewClass(QString name)
 AccessDialog::AccessDialog(QWidget *parent)
 {
     setParent(parent);
+    setFont(QFont("Monospace",12,1));
+    setWindowIcon(QIcon("://logo.ico"));
 
     QVBoxLayout *layout = new QVBoxLayout(this);
     setLayout(layout);
