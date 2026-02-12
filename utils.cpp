@@ -51,3 +51,13 @@ void setItemColor(QTableWidgetItem *item)
         item->setBackground(QBrush(Qt::yellow));
     }
 }
+
+QStringList getStudentNames(Database *db)
+{
+    QStringList names;
+    for(int i=0;i<db->students.size();i++)
+    {
+        names<<db->students[i].name;
+    }
+    return names;
+}

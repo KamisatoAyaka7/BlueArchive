@@ -10,22 +10,30 @@ CONFIG += c++17
 
 SOURCES += \
     accessdialog.cpp \
+    confirmbox.cpp \
     database.cpp \
+    exameditor.cpp \
     examviewer.cpp \
     main.cpp \
     mainwindow.cpp \
     student.cpp \
+    studenteditor.cpp \
     studentviewer.cpp \
+    subjecteditor.cpp \
     subjectviewer.cpp\
     utils.cpp
 
 HEADERS += \
     accessdialog.h \
+    confirmbox.h \
     database.h \
+    exameditor.h \
     examviewer.h \
     mainwindow.h \
     student.h \
+    studenteditor.h \
     studentviewer.h \
+    subjecteditor.h \
     subjectviewer.h \
     utils.h
 

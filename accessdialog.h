@@ -8,9 +8,19 @@
 
 class AccessDialog : public QDialog
 {
+    Q_OBJECT
 public:
     AccessDialog(QWidget *parent = nullptr);
 
+    QStringList getClasses();
+    QString toSelectedClass();
+
+private:
+    QComboBox *classBox;
+    QToolButton *selectBtn,*createBtn;
+    QLineEdit *createEdit;
+
+    void createNewClass(QString name);
 };
 
 #endif // ACCESSDIALOG_H

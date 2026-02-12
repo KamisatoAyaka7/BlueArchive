@@ -63,7 +63,7 @@ StudentViewer::StudentViewer(Database *db,QWidget *parent)
     for(int i1=0;i1<database->students.size();i1++)
     {
         tab->addTab(new StudentTable(database,i1,this),database->students[i1].name);
-        tab->setTabToolTip(i1,QString::number(database->students[i1].id));
+        tab->setTabToolTip(i1,database->students[i1].id);
     }
 
     layout->addWidget(toolbar);

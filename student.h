@@ -33,10 +33,9 @@ class Student
 {
 public:
     Student();
-    Student(QString setName,long setId);
+    Student(QString setName,QString setId);
 
-    QString name;
-    long long id;
+    QString name,id;
 
     std::vector<Exam> exams;
 };

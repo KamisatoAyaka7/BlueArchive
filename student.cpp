@@ -33,7 +33,7 @@ Subject::Subject()
     Subject(0,0,0,0);
 }
 
-Student::Student(QString setName,long setId)
+Student::Student(QString setName,QString setId)
 {
     name = setName;
     id = setId;

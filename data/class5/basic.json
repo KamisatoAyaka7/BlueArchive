@@ -1,2 +1,14 @@
-{"subjects":["Chinese","Mathematic","English","Physics","Chemistry","Biology"],
-"exams":["exam1","exam2"]}
+{
+    "exams": [
+        "exam1",
+        "exam2"
+    ],
+    "subjects": [
+        "Chinese",
+        "Mathematic",
+        "English",
+        "Physics",
+        "Chemistry",
+        "Biology"
+    ]
+}

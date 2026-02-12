@@ -12,7 +12,7 @@ bool Database::readStudentData(QString inPath,Student *setStudent)
     file.close();
 
     setStudent->name = obj["name"].toString();
-    setStudent->id = QFileInfo(inPath).baseName().toLongLong();
+    setStudent->id = QFileInfo(inPath).baseName();
     QJsonArray examArray = obj["data"].toArray();
     for(int i1=0;i1<examArray.count();i1++)
     {
@@ -54,13 +54,12 @@ bool Database::readBasicData()
     {
         exams<<array2[i1].toString();
     }
-    //qDebug()<<exams.size();
     return true;
 }
 
 bool Database::writeStudentData(Student *setStudent)
 {
-    QFile file(QDir::cleanPath(path+"/students_data/"+QString::number(setStudent->id)+".json"));
+    QFile file(QDir::cleanPath(path+"/students_data/"+setStudent->id+".json"));
     if(!file.open(QIODevice::WriteOnly | QIODevice::Truncate))
         return false;
 
@@ -87,6 +86,25 @@ bool Database::writeStudentData(Student *setStudent)
     QJsonDocument doc ;
     doc.setObject(root);
     file.write(doc.toJson());
+    file.close();
+
+    return true;
+}
+
+bool Database::writeBasic()
+{
+    QFile file(QDir::cleanPath(path+"/basic.json"));
+    if(!file.open(QIODevice::WriteOnly | QIODevice::Truncate))
+        return false;
+
+    QJsonObject root;
+    root.insert("subjects",QJsonArray::fromStringList(subjects));
+    root.insert("exams",QJsonArray::fromStringList(exams));
+
+    QJsonDocument doc ;
+    doc.setObject(root);
+    file.write(doc.toJson());
+    file.close();
 
     return true;
 }
@@ -113,6 +131,7 @@ bool Database::readAll()
 
 bool Database::writeAll()
 {
+    writeBasic();
     for(int i1=0;i1<students.size();i1++)
     {
         if(!writeStudentData(&students[i1]))
@@ -128,6 +147,55 @@ void Database::f_dataChanged(int stu,int exam,int sub,Subject newData)
     students[stu].exams[exam].subjects[sub].realRank = newData.realRank;
     students[stu].exams[exam].subjects[sub].goalScore = newData.goalScore;
     students[stu].exams[exam].subjects[sub].realScore = newData.realScore;
+}
+
+void Database::deleteStudent(QString id)
+{
+    for(int i=0;i<students.size();i++)
+    {
+        if(students[i].id==id)
+        {
+            students.erase(students.begin()+i);
+            break;
+        }
+    }
+}
+
+void Database::deleteExam(QString name)
+{
+    int index = 0;
+    for(;index<exams.count();index++)
+    {
+        if(exams[index]==name)
+        {
+            exams.erase(exams.begin()+index);
+            break;
+        }
+    }
+    for(int i1=0;i1<students.size();i1++)
+    {
+        students[i1].exams.erase(students[i1].exams.begin()+index);
+    }
+}
+
+void Database::deleteSubject(QString name)
+{
+    int index = 0;
+    for(;index<subjects.count();index++)
+    {
+        if(subjects[index]==name)
+        {
+            subjects.erase(subjects.begin()+index);
+            break;
+        }
+    }
+    for(int i1=0;i1<students.size();i1++)
+    {
+        for(int i2=0;i2<exams.size();i2++)
+        {
+            students[i1].exams[i2].subjects.erase(students[i1].exams[i2].subjects.begin()+index);
+        }
+    }
 }
 
 Database::Database(QString setPath)
