@@ -18,9 +18,23 @@ public:
     QToolBar *toolbar;
 
 private:
+    template<typename viewerType>
+    void showWidget();
+
     void showStudentViewer();
     void showSubjectViewer();
     void showExamViewer();
+
+    void showStudentEditor();
+    void showSubjectEditor();
+    void showExamEditor();
+
+    void deleteStudent();
+    void deleteExam();
+    void deleteSubject();
+
+    void saveData();
+    void readData();
 
     void createMenuToolBar();
 

@@ -20,9 +20,14 @@ public:
     bool readStudentData(QString inPath,Student *setStudent);
     bool readBasicData();
     bool writeStudentData(Student *setStudent);
+    bool writeBasic();
 
     bool readAll();
     bool writeAll();
+
+    void deleteStudent(QString id);
+    void deleteExam(QString name);
+    void deleteSubject(QString name);
 
     std::vector<Student> students;
     QStringList subjects,exams;
