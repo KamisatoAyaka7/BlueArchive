@@ -15,11 +15,14 @@ public:
 
     QString path;
     Database *database;
+    QToolBar *toolbar;
 
 private:
     void showStudentViewer();
     void showSubjectViewer();
     void showExamViewer();
+
+    void createMenuToolBar();
 
     bool init();
 };

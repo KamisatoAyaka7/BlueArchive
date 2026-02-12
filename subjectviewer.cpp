@@ -23,28 +23,21 @@ SubjectTable::SubjectTable(Database *db,int setIndex,QWidget *parent)
     setHorizontalHeaderLabels(stuNameList);
 
     connect(this,&QTableWidget::cellChanged,this,&SubjectTable::m_dataChanged);
-    connect(database,&Database::s_dataChanged,this,&SubjectTable::getDataChanged);
 }
 
 SubjectTable::SubjectTable(QWidget *parent)
 {
     setParent(parent);
     connect(this,&QTableWidget::cellChanged,this,&SubjectTable::m_dataChanged);
-    connect(database,&Database::s_dataChanged,this,&SubjectTable::getDataChanged);
 }
 
 void SubjectTable::m_dataChanged(int row,int column)
 {
     QString newText = item(row,column)->text();
-    database->f_dataChanged(column,row,index,text2Sub(newText));
-}
-
-void SubjectTable::getDataChanged(int stu,int exam,int sub)
-{
-    if(sub!=index)
+    if(sub2Text(&database->students[column].exams[row].subjects[index])==newText)
         return;
-    Subject *subject = &database->students[stu].exams[exam].subjects[sub];
-    item(exam,stu)->setText(sub2Text(subject));
+    database->f_dataChanged(column,row,index,text2Sub(newText));
+    setItemColor(item(row,column));
 }
 
 SubjectViewer::SubjectViewer(Database *db,QWidget *parent)
@@ -52,12 +45,23 @@ SubjectViewer::SubjectViewer(Database *db,QWidget *parent)
     setParent(parent);
     database = db;
 
+    QVBoxLayout *layout = new QVBoxLayout(this);
+
+    toolbar = new QToolBar("",this);
+    toolbar->setMovable(false);
+
+    QToolButton *btn = new QToolButton(this);
+    btn->setText("close");
+    connect(btn,&QToolButton::clicked,this,&QWidget::close);
+    toolbar->addWidget(btn);
+
     tab = new QTabWidget(this);
     for(int i1=0;i1<database->subjects.count();i1++)
     {
         tab->addTab(new SubjectTable(database,i1,this),database->subjects[i1]);
     }
-    QVBoxLayout *layout = new QVBoxLayout(this);
+
+    layout->addWidget(toolbar);
     layout->addWidget(tab);
     setLayout(layout);
 }
