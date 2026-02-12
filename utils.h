@@ -9,5 +9,6 @@ QTableWidgetItem *createAnItem(Student *stu,int subIndex,int examIndex);
 QTableWidgetItem *createAnItem(Subject *subject);
 Subject text2Sub(QString text);
 QString sub2Text(Subject *subject);
+void setItemColor(QTableWidgetItem *item);
 
 #endif // UTILS_H

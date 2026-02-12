@@ -7,6 +7,8 @@
 #include<QTabWidget>
 #include<QVBoxLayout>
 #include<QHBoxLayout>
+#include<QToolBar>
+#include<QToolButton>
 
 #include "database.h"
 
@@ -21,7 +23,6 @@ public:
     int index = 0;
 private slots:
     void m_dataChanged(int row,int column);
-    void getDataChanged(int stu,int exam,int sub);
 };
 
 class SubjectViewer : public QWidget
@@ -32,6 +33,7 @@ public:
     SubjectViewer(Database *db,QWidget *parent = nullptr);
 
     Database *database;
+    QToolBar *toolbar;
     QTabWidget *tab;
 };
 

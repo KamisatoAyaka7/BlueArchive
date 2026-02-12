@@ -5,15 +5,10 @@
 void StudentTable::m_dataChanged(int row,int column)
 {
     QString newText = item(row,column)->text();
-    database->f_dataChanged(index,row,column,text2Sub(newText));
-}
-
-void StudentTable::getDataChanged(int stu,int exam,int sub)
-{
-    if(stu!=index)
+    if(sub2Text(&database->students[index].exams[row].subjects[column]) == newText)
         return;
-    Subject *subject = &database->students[stu].exams[exam].subjects[sub];
-    item(exam,sub)->setText(sub2Text(subject));
+    database->f_dataChanged(index,row,column,text2Sub(newText));
+    setItemColor(item(row,column));
 }
 
 StudentTable::StudentTable(Database *db,int setIndex,QWidget *parent)
@@ -36,14 +31,12 @@ StudentTable::StudentTable(Database *db,int setIndex,QWidget *parent)
     }
 
     connect(this,&QTableWidget::cellChanged,this,&StudentTable::m_dataChanged);
-    connect(database,&Database::s_dataChanged,this,&StudentTable::getDataChanged);
 }
 
 StudentTable::StudentTable(QWidget *parent)
 {
     setParent(parent);
     connect(this,&QTableWidget::cellChanged,this,&StudentTable::m_dataChanged);
-    connect(database,&Database::s_dataChanged,this,&StudentTable::getDataChanged);
 }
 
 StudentViewer::StudentViewer(QWidget *parent)
@@ -56,6 +49,16 @@ StudentViewer::StudentViewer(Database *db,QWidget *parent)
     setParent(parent);
     database = db;
 
+    QVBoxLayout *layout = new QVBoxLayout(this);
+
+    toolbar = new QToolBar("",this);
+    toolbar->setMovable(false);
+
+    QToolButton *btn = new QToolButton(this);
+    btn->setText("close");
+    connect(btn,&QToolButton::clicked,this,&QWidget::close);
+    toolbar->addWidget(btn);
+
     tab = new QTabWidget(this);
     for(int i1=0;i1<database->students.size();i1++)
     {
@@ -63,7 +66,7 @@ StudentViewer::StudentViewer(Database *db,QWidget *parent)
         tab->setTabToolTip(i1,QString::number(database->students[i1].id));
     }
 
-    QVBoxLayout *layout = new QVBoxLayout(this);
+    layout->addWidget(toolbar);
     layout->addWidget(tab);
     setLayout(layout);
 }

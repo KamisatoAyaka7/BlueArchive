@@ -11,39 +11,32 @@ ExamTable::ExamTable(Database *db,int setIndex,QWidget *parent)
     setRowCount(database->subjects.count());
     setVerticalHeaderLabels(database->subjects);
     setColumnCount(database->students.size());
-    QStringList stuNameList;
+    QStringList stuNameList={};
     for(int i1=0;i1<database->students.size();i1++)
     {
         stuNameList<<database->students[i1].name;
         for(int i2=0;i2<database->subjects.size();i2++)
         {
-            setItem(i2,i1,createAnItem(&database->students[i1],index,i2));
+            setItem(i2,i1,createAnItem(&database->students[i1],i2,index));
         }
     }
     setHorizontalHeaderLabels(stuNameList);
     connect(this,&QTableWidget::cellChanged,this,&ExamTable::m_dataChanged);
-    connect(database,&Database::s_dataChanged,this,&ExamTable::getDataChanged);
 }
 
 ExamTable::ExamTable(QWidget *parent)
 {
     setParent(parent);
     connect(this,&QTableWidget::cellChanged,this,&ExamTable::m_dataChanged);
-    connect(database,&Database::s_dataChanged,this,&ExamTable::getDataChanged);
 }
 
 void ExamTable::m_dataChanged(int row,int column)
 {
     QString newText = item(row,column)->text();
-    database->f_dataChanged(column,index,row,text2Sub(newText));
-}
-
-void ExamTable::getDataChanged(int stu,int exam,int sub)
-{
-    if(exam!=index)
+    if(sub2Text(&database->students[column].exams[index].subjects[row])==newText)
         return;
-    Subject *subject = &database->students[stu].exams[exam].subjects[sub];
-    item(sub,stu)->setText(sub2Text(subject));
+    database->f_dataChanged(column,index,row,text2Sub(newText));
+    setItemColor(item(row,column));
 }
 
 ExamViewer::ExamViewer(Database *db,QWidget *parent)
@@ -51,12 +44,23 @@ ExamViewer::ExamViewer(Database *db,QWidget *parent)
     setParent(parent);
     database = db;
 
+    QVBoxLayout *layout = new QVBoxLayout(this);
+
+    toolbar = new QToolBar("",this);
+    toolbar->setMovable(false);
+
+    QToolButton *btn = new QToolButton(this);
+    btn->setText("close");
+    connect(btn,&QToolButton::clicked,this,&QWidget::close);
+    toolbar->addWidget(btn);
+
     tab = new QTabWidget(this);
     for(int i1=0;i1<database->exams.count();i1++)
     {
         tab->addTab(new ExamTable(database,i1,this),database->exams[i1]);
     }
-    QVBoxLayout *layout = new QVBoxLayout(this);
+
+    layout->addWidget(toolbar);
     layout->addWidget(tab);
     setLayout(layout);
 }

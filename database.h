@@ -30,8 +30,6 @@ public:
 
     void f_dataChanged(int stu,int exam,int sub,Subject newData);
 
-signals:
-    void s_dataChanged(int stu,int exam,int sub);
 };
 
 #endif // DATABASE_H

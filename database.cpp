@@ -128,7 +128,6 @@ void Database::f_dataChanged(int stu,int exam,int sub,Subject newData)
     students[stu].exams[exam].subjects[sub].realRank = newData.realRank;
     students[stu].exams[exam].subjects[sub].goalScore = newData.goalScore;
     students[stu].exams[exam].subjects[sub].realScore = newData.realScore;
-    emit s_dataChanged(stu,exam,sub);
 }
 
 Database::Database(QString setPath)

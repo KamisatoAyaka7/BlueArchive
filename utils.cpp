@@ -5,19 +5,7 @@ QTableWidgetItem *createAnItem(Student *stu,int subIndex,int examIndex)
     QTableWidgetItem *item = new QTableWidgetItem();
     Subject *subject = &stu->exams[examIndex].subjects[subIndex];
     item->setText(sub2Text(subject));
-    if(subject->goalRank<subject->realRank)
-    {
-        item->setBackground(QBrush(Qt::red));
-        if(subject->goalScore>subject->realScore)
-        {
-            item->setBackground(QBrush(Qt::blue));
-        }
-    }
-    if(subject->goalScore>subject->realScore)
-    {
-        item->setBackground(QBrush(Qt::yellow));
-    }
-
+    setItemColor(item);
     return item;
 }
 
@@ -25,19 +13,7 @@ QTableWidgetItem *createAnItem(Subject *subject)
 {
     QTableWidgetItem *item = new QTableWidgetItem();
     item->setText(sub2Text(subject));
-    if(subject->goalRank<subject->realRank)
-    {
-        item->setBackground(QBrush(Qt::red));
-        if(subject->goalScore>subject->realScore)
-        {
-            item->setBackground(QBrush(Qt::blue));
-        }
-    }
-    if(subject->goalScore>subject->realScore)
-    {
-        item->setBackground(QBrush(Qt::yellow));
-    }
-
+    setItemColor(item);
     return item;
 }
 
@@ -57,4 +33,21 @@ QString sub2Text(Subject *subject)
             QString::number(subject->toGoalScore())+","+
             QString::number(subject->realRank)+"/"+
             QString::number(subject->goalRank);
+}
+
+void setItemColor(QTableWidgetItem *item)
+{
+    Subject subject = text2Sub(item->text());
+    if(subject.goalRank<subject.realRank)
+    {
+        item->setBackground(QBrush(Qt::red));
+        if(subject.goalScore>subject.realScore)
+        {
+            item->setBackground(QBrush(Qt::blue));
+        }
+    }
+    else if(subject.goalScore>subject.realScore)
+    {
+        item->setBackground(QBrush(Qt::yellow));
+    }
 }
