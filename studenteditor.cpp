@@ -14,6 +14,8 @@ StudentEditorTable::StudentEditorTable(Database *db,QWidget *parent)
     database = db;
     setParent(parent);
 
+    setTableColor(this);
+
     setRowCount(database->exams.count());
     setVerticalHeaderLabels(database->exams);
     setColumnCount(database->subjects.count());
@@ -29,6 +31,19 @@ void StudentEditor::getNewStudent()
 {
     Student stu;
     stu.id = idEdit->text();
+    if(stu.id.isEmpty())
+    {
+        QMessageBox::warning(this, tr("Error"), tr("Student's id can't be empty"));
+        return;
+    }
+    for(int i1=0;i1<database->students.size();i1++)
+    {
+        if(database->students[i1].id==stu.id)
+        {
+            QMessageBox::warning(this, tr("Error"), tr("Student already exists"));
+            return;
+        }
+    }
     stu.name = nameEdit->text();
     for(int i1=0;i1<database->exams.count();i1++)
     {

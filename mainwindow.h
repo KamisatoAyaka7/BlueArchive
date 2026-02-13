@@ -40,6 +40,9 @@ private:
     void saveData();
     void readData();
 
+    void showAboutText();
+    void showHelpText();
+
     void createMenuToolBar();
     void bindShortCuts();
     void createStatusBar();

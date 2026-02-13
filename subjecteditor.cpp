@@ -14,6 +14,8 @@ SubjectEditorTable::SubjectEditorTable(Database *db,QWidget *parent)
     database = db;
     setParent(parent);
 
+    setTableColor(this);
+
     setRowCount(database->exams.count());
     setVerticalHeaderLabels(database->exams);
     setColumnCount(database->students.size());

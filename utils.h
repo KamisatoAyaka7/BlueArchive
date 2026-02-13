@@ -14,5 +14,6 @@ bool checkText2Sub(QString text);
 void setItemColor(QTableWidgetItem *item,Subject *sub);
 QStringList getStudentNames(Database *db);
 QString getFileText(QString path);
+void setTableColor(QTableWidget *table);
 
 #endif // UTILS_H
