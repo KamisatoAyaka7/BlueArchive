@@ -36,7 +36,6 @@ bool MainWindow::init()
 
 void MainWindow::saveData()
 {
-    qDebug()<<1;
     if(database->writeAll())
     {
         statusBar()->showMessage("Saved successfully",2000);
@@ -113,6 +112,25 @@ void MainWindow::deleteSubject()
     box->deleteLater();
 }
 
+void MainWindow::showAboutText()
+{
+    QTextBrowser *broswer = new QTextBrowser(this);
+    if(centralWidget()!=nullptr)
+        centralWidget()->close();
+    broswer->setText(getFileText(QDir::cleanPath(PATH+"/data/about.txt")));
+    setCentralWidget(broswer);
+    broswer->show();
+}
+
+void MainWindow::showHelpText()
+{
+    QTextBrowser *broswer = new QTextBrowser(this);
+    if(centralWidget()!=nullptr)
+        centralWidget()->close();
+    broswer->setText(getFileText(QDir::cleanPath(PATH+"/data/help.txt")));
+    setCentralWidget(broswer);
+}
+
 void MainWindow::createMenuToolBar()
 {
     toolbar = addToolBar("Menu");
@@ -134,7 +152,7 @@ void MainWindow::createMenuToolBar()
         QToolButton *fileBtn = new QToolButton(this);
         fileBtn->setMenu(fileMenu);
         fileBtn->setPopupMode(QToolButton::InstantPopup);
-        fileBtn->setText("file");
+        fileBtn->setText("File");
         toolbar->addWidget(fileBtn);
     }
 
@@ -160,7 +178,7 @@ void MainWindow::createMenuToolBar()
         QToolButton *viewBtn = new QToolButton(this);
         viewBtn->setMenu(viewMenu);
         viewBtn->setPopupMode(QToolButton::InstantPopup);
-        viewBtn->setText("view");
+        viewBtn->setText("View");
         toolbar->addWidget(viewBtn);
     }
 
@@ -187,7 +205,7 @@ void MainWindow::createMenuToolBar()
         QToolButton *editBtn = new QToolButton(this);
         editBtn->setMenu(editMenu);
         editBtn->setPopupMode(QToolButton::InstantPopup);
-        editBtn->setText("edit");
+        editBtn->setText("Edit");
         toolbar->addWidget(editBtn);
     }
 
@@ -195,27 +213,14 @@ void MainWindow::createMenuToolBar()
         QMenu *aboutMenu = new QMenu("about",this);
 
         QAction *aboutAction = aboutMenu->addAction("About");
-        connect(aboutAction,&QAction::triggered,this,[=](){
-            QTextBrowser *broswer = new QTextBrowser(this);
-            if(centralWidget()!=nullptr)
-                centralWidget()->close();
-            broswer->setText(getFileText(QDir::cleanPath(PATH+"/data/about.txt")));
-            setCentralWidget(broswer);
-            broswer->show();
-        });
+        connect(aboutAction,&QAction::triggered,this,&MainWindow::showAboutText);
 
         QAction *helpAction = aboutMenu->addAction("Help");
-        connect(helpAction,&QAction::triggered,this,[=](){
-            QTextBrowser *broswer = new QTextBrowser(this);
-            if(centralWidget()!=nullptr)
-                centralWidget()->close();
-            broswer->setText(getFileText(QDir::cleanPath(PATH+"/data/help.txt")));
-            setCentralWidget(broswer);
-        });
+        connect(helpAction,&QAction::triggered,this,&MainWindow::showHelpText);
 
         QToolButton *aboutBtn = new QToolButton(this);
         aboutBtn->setMenu(aboutMenu);
-        aboutBtn->setText("about");
+        aboutBtn->setText("About");
         aboutBtn->setPopupMode(QToolButton::InstantPopup);
         toolbar->addWidget(aboutBtn);
     }
@@ -243,13 +248,7 @@ void MainWindow::bindShortCuts()
     connect(readShortCut,&QShortcut::activated,this,&MainWindow::readData);
 
     QShortcut *helpShortCut = new QShortcut(QKeySequence("F1"),this);
-    connect(helpShortCut,&QShortcut::activated,this,[=](){
-            QTextBrowser *broswer = new QTextBrowser(this);
-            if(centralWidget()!=nullptr)
-                centralWidget()->close();
-            broswer->setText(getFileText(QDir::cleanPath(PATH+"/data/help.txt")));
-            setCentralWidget(broswer);
-    });
+    connect(helpShortCut,&QShortcut::activated,this,&MainWindow::showHelpText);
 }
 
 void MainWindow::createStatusBar()
@@ -269,6 +268,7 @@ MainWindow::MainWindow(QString setPath,QWidget *parent)
     }
     createMenuToolBar();
     createStatusBar();
+    bindShortCuts();
 
     setWindowIcon(QIcon("://logo.ico"));
     setFont(QFont("Monospace",12,1));

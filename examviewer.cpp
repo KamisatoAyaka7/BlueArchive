@@ -10,6 +10,8 @@ ExamTable::ExamTable(Database *db,int setIndex,QWidget *parent)
     index = setIndex;
     database = db;
 
+    setEditTriggers(QAbstractItemView::AllEditTriggers);
+
     setRowCount(database->subjects.count());
     setVerticalHeaderLabels(database->subjects);
     setColumnCount(database->students.size());
@@ -62,6 +64,7 @@ ExamViewer::ExamViewer(Database *db,QWidget *parent)
     connect(btn,&QToolButton::clicked,this,&QWidget::close);
 
     tab = new QTabWidget(this);
+    tab->setMovable(true);
     for(int i1=0;i1<database->exams.count();i1++)
     {
         tab->addTab(new ExamTable(database,i1,this),database->exams[i1]);

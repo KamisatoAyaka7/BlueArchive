@@ -10,6 +10,8 @@ SubjectTable::SubjectTable(Database *db,int setIndex,QWidget *parent)
     index = setIndex;
     database = db;
 
+    setEditTriggers(QAbstractItemView::AllEditTriggers);
+
     setRowCount(database->exams.count());
     setVerticalHeaderLabels(database->exams);
     setColumnCount(database->students.size());
@@ -63,6 +65,7 @@ SubjectViewer::SubjectViewer(Database *db,QWidget *parent)
     connect(btn,&QToolButton::clicked,this,&QWidget::close);
 
     tab = new QTabWidget(this);
+    tab->setMovable(true);
     for(int i1=0;i1<database->subjects.count();i1++)
     {
         tab->addTab(new SubjectTable(database,i1,this),database->subjects[i1]);

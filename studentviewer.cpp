@@ -26,6 +26,8 @@ StudentTable::StudentTable(Database *db,int setIndex,QWidget *parent)
     index = setIndex;
     database = db;
 
+    setEditTriggers(QAbstractItemView::AllEditTriggers);
+
     setRowCount(database->exams.count());
     setVerticalHeaderLabels(database->exams);
     setColumnCount(database->subjects.count());
@@ -63,6 +65,7 @@ StudentViewer::StudentViewer(Database *db,QWidget *parent)
     layout->setSpacing(0);
 
     tab = new QTabWidget(this);
+    tab->setMovable(true);
     for(int i1=0;i1<database->students.size();i1++)
     {
         tab->addTab(new StudentTable(database,i1,this),database->students[i1].name);
