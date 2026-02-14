@@ -33,9 +33,9 @@ StudentTable::StudentTable(Database *db,int setIndex,QWidget *parent)
     setColumnCount(database->subjects.count());
     setHorizontalHeaderLabels(database->subjects);
 
-    for(int i1=0;i1<database->exams.count();i1++)
+    for(unsigned int i1=0;i1<database->exams.count();i1++)
     {
-        for(int i2=0;i2<database->subjects.count();i2++)
+        for(unsigned int i2=0;i2<database->subjects.count();i2++)
         {
             setItem(i1,i2,createAnItem(&database->students[index],i2,i1));
         }
@@ -66,7 +66,7 @@ StudentViewer::StudentViewer(Database *db,QWidget *parent)
 
     tab = new QTabWidget(this);
     tab->setMovable(true);
-    for(int i1=0;i1<database->students.size();i1++)
+    for(unsigned int i1=0;i1<database->students.size();i1++)
     {
         tab->addTab(new StudentTable(database,i1,this),database->students[i1].name);
         tab->setTabToolTip(i1,database->students[i1].id);

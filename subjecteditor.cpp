@@ -20,6 +20,8 @@ SubjectEditorTable::SubjectEditorTable(Database *db,QWidget *parent)
     setVerticalHeaderLabels(database->exams);
     setColumnCount(database->students.size());
     setHorizontalHeaderLabels(getStudentNames(database));
+
+    createTableItems(this);
 }
 
 SubjectEditorTable::SubjectEditorTable(QWidget *parent)
@@ -30,16 +32,17 @@ SubjectEditorTable::SubjectEditorTable(QWidget *parent)
 void SubjectEditor::getNewSubject()
 {
     database->subjects<<nameEdit->text();
-    for(int i1=0;i1<database->students.size();i1++)
+    bool ok = false;
+    for(unsigned int i1=0;i1<database->students.size();i1++)
     {
-        for(int i2=0;i2<database->exams.count();i2++)
+        for(unsigned int i2=0;i2<database->exams.count();i2++)
         {
-            bool ok = false;
             Subject newSub = text2Sub(table->getItemText(i2,i1),&ok);
             if(!ok)
             {
-                QMessageBox::warning(this, tr("Error"), tr("Could not convert"));
-                return;
+                QString info = "Could not convert:\n";
+                info+="cell: row:"+QString::number(i2+1)+" column:"+QString::number(i1+1);
+                QMessageBox::warning(this, tr("Error"), info);
             }
             database->students[i1].exams[i2].subjects.push_back(newSub);
         }
@@ -56,11 +59,6 @@ SubjectEditor::SubjectEditor(Database *db,QWidget *parent)
 
     toolbar = new QToolBar(this);
     layout->addWidget(toolbar);
-
-    closeBtn = new QToolButton(this);
-    closeBtn->setText("close");
-    connect(closeBtn,&QToolButton::clicked,this,&QWidget::close);
-    toolbar->addWidget(closeBtn);
 
     nameEdit = new QLineEdit(this);
     nameEdit->setPlaceholderText("name");

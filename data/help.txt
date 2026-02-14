@@ -1,1 +1,14 @@
-help
+Shortcuts:
+    Ctrl+s: Save
+    Ctrl+r: Load
+    F1: Help
+
+User Guide:
+    Under "View", you can view data from the perspectives of students, exams, and subjects, and also modify individual cell data.
+    Under "Edit", you can add or delete data from the three perspectives mentioned above.
+    Remember to save after modifying data.
+
+Cell Data Format:
+    The data should be "actual score/target score, actual rank/target rank", if target score and target rank are available.
+    The data should be "actual score, actual rank", if target score and target rank are not available.
+    Please fill in the data using the same format.

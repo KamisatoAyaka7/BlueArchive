@@ -1,1 +1,11 @@
-about
+BlondeArchive 0.2026.2.14
+
+Description: A students exam management system
+
+Copyright @2026 szy, all rights reserved
+
+licence: GNU General Public License v3.0 
+
+Much thanks to Qt and BlueArchive
+
+Website: https://github.com/KamisatoAyaka7/BlueArchive
