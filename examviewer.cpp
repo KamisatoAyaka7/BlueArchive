@@ -16,10 +16,10 @@ ExamTable::ExamTable(Database *db,int setIndex,QWidget *parent)
     setVerticalHeaderLabels(database->subjects);
     setColumnCount(database->students.size());
     QStringList stuNameList={};
-    for(int i1=0;i1<database->students.size();i1++)
+    for(unsigned int i1=0;i1<database->students.size();i1++)
     {
         stuNameList<<database->students[i1].name;
-        for(int i2=0;i2<database->subjects.size();i2++)
+        for(unsigned int i2=0;i2<database->subjects.size();i2++)
         {
             setItem(i2,i1,createAnItem(&database->students[i1],i2,index));
         }

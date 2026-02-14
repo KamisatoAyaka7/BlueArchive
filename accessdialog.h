@@ -16,6 +16,8 @@ public:
     QString toSelectedClass();
 
 private:
+    void onSelectBtnClicked();
+
     QComboBox *classBox;
     QToolButton *selectBtn,*createBtn;
     QLineEdit *createEdit;

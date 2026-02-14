@@ -33,7 +33,7 @@ public:
     Database *database;
     ExamEditorTable *table;
     QLineEdit *nameEdit;
-    QToolButton *closeBtn,*confirmBtn;
+    QToolButton *confirmBtn;
     QToolBar *toolbar;
 };
 

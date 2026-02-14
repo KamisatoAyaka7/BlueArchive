@@ -147,7 +147,10 @@ void MainWindow::createMenuToolBar()
 
         fileMenu->addSeparator();
         QAction *exitAction = fileMenu->addAction("Exit");
-        connect(exitAction,&QAction::triggered,this,&QWidget::close);
+        connect(exitAction,&QAction::triggered,this,[=](){
+            saveData();
+            close();
+        });
 
         QToolButton *fileBtn = new QToolButton(this);
         fileBtn->setMenu(fileMenu);
@@ -241,7 +244,7 @@ void MainWindow::resizeEvent(QResizeEvent *event)
 
 void MainWindow::bindShortCuts()
 {
-    QShortcut *saveShortCut = new QShortcut(QKeySequence::Save,this);
+    QShortcut *saveShortCut = new QShortcut(QKeySequence("Ctrl+s"),this);
     connect(saveShortCut,&QShortcut::activated,this,&MainWindow::saveData);
 
     QShortcut *readShortCut = new QShortcut(QKeySequence("Ctrl+r"),this);

@@ -20,6 +20,8 @@ StudentEditorTable::StudentEditorTable(Database *db,QWidget *parent)
     setVerticalHeaderLabels(database->exams);
     setColumnCount(database->subjects.count());
     setHorizontalHeaderLabels(database->subjects);
+
+    createTableItems(this);
 }
 
 StudentEditorTable::StudentEditorTable(QWidget *parent)
@@ -36,7 +38,7 @@ void StudentEditor::getNewStudent()
         QMessageBox::warning(this, tr("Error"), tr("Student's id can't be empty"));
         return;
     }
-    for(int i1=0;i1<database->students.size();i1++)
+    for(unsigned int i1=0;i1<database->students.size();i1++)
     {
         if(database->students[i1].id==stu.id)
         {
@@ -45,17 +47,18 @@ void StudentEditor::getNewStudent()
         }
     }
     stu.name = nameEdit->text();
-    for(int i1=0;i1<database->exams.count();i1++)
+    bool ok=false;
+    for(unsigned int i1=0;i1<database->exams.count();i1++)
     {
         Exam exam;
-        for(int i2=0;i2<database->subjects.count();i2++)
+        for(unsigned int i2=0;i2<database->subjects.count();i2++)
         {
-            bool ok=false;
             Subject newSub = text2Sub(table->getItemText(i1,i2),&ok);
             if(!ok)
             {
-                QMessageBox::warning(this, tr("Error"), tr("Could not convert"));
-                return;
+                QString info = "Could not convert:\n";
+                info+="cell: row:"+QString::number(i1+1)+" column:"+QString::number(i2+1);
+                QMessageBox::warning(this, tr("Error"), info);
             }
             exam.subjects.push_back(newSub);
         }
@@ -74,11 +77,6 @@ StudentEditor::StudentEditor(Database *db,QWidget *parent)
 
     toolbar = new QToolBar(this);
     layout->addWidget(toolbar);
-
-    closeBtn = new QToolButton(this);
-    closeBtn->setText("close");
-    connect(closeBtn,&QToolButton::clicked,this,&QWidget::close);
-    toolbar->addWidget(closeBtn);
 
     nameEdit = new QLineEdit(this);
     nameEdit->setPlaceholderText("name");

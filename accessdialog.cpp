@@ -38,6 +38,17 @@ void AccessDialog::createNewClass(QString name)
     basic.close();
     dir.mkdir(QDir::cleanPath(folderPath+"/students_data"));
     classBox->addItem(name);
+    classBox->setCurrentIndex(classBox->count()-1);
+}
+
+void AccessDialog::onSelectBtnClicked()
+{
+    if(classBox->currentText().isEmpty())
+    {
+        QMessageBox::information(nullptr,"Infomation","Please select a class");
+        return;
+    }
+    accept();
 }
 
 AccessDialog::AccessDialog(QWidget *parent)
@@ -66,7 +77,7 @@ AccessDialog::AccessDialog(QWidget *parent)
     createLayout->addWidget(createBtn);
     layout->addLayout(createLayout);
 
-    connect(selectBtn,&QToolButton::clicked,this,&QDialog::accept);
+    connect(selectBtn,&QToolButton::clicked,this,&AccessDialog::onSelectBtnClicked);
     connect(createEdit,&QLineEdit::returnPressed,this,[=](){
         createNewClass(createEdit->text());
     });

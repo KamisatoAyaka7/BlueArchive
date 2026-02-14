@@ -14,17 +14,17 @@ bool Database::readStudentData(QString inPath,Student *setStudent)
     setStudent->name = obj["name"].toString();
     setStudent->id = QFileInfo(inPath).baseName();
     QJsonArray examArray = obj["data"].toArray();
-    for(int i1=0;i1<examArray.count();i1++)
+    for(unsigned int i1=0;i1<examArray.count();i1++)
     {
         Exam *newExam = new Exam();
         QJsonArray subjectArray = examArray[i1].toArray();
-        for(int i2=0;i2<subjectArray.count();i2++)
+        for(unsigned int i2=0;i2<subjectArray.count();i2++)
         {
             newExam->subjects.push_back(*(new Subject(
                 subjectArray[i2][0].toInt(),
                 subjectArray[i2][1].toInt(),
-                subjectArray[i2][0].toDouble(),
-                subjectArray[i2][0].toDouble())));
+                subjectArray[i2][2].toDouble(),
+                subjectArray[i2][3].toDouble())));
         }
         setStudent->exams.push_back(*newExam);
     }
@@ -67,10 +67,10 @@ bool Database::writeStudentData(Student *setStudent)
     root.insert("name",setStudent->name);
 
     QJsonArray examArray;
-    for(int i1=0;i1<setStudent->exams.size();i1++)
+    for(unsigned int i1=0;i1<setStudent->exams.size();i1++)
     {
         QJsonArray subjectArray;
-        for(int i2=0;i2<setStudent->exams[i1].subjects.size();i2++)
+        for(unsigned int i2=0;i2<setStudent->exams[i1].subjects.size();i2++)
         {
             QJsonArray singleSubjectArray;
             singleSubjectArray.append(setStudent->exams[i1].subjects[i2].goalRank);
@@ -132,7 +132,7 @@ bool Database::readAll()
 bool Database::writeAll()
 {
     writeBasic();
-    for(int i1=0;i1<students.size();i1++)
+    for(unsigned int i1=0;i1<students.size();i1++)
     {
         if(!writeStudentData(&students[i1]))
             return false;
@@ -151,7 +151,7 @@ void Database::f_dataChanged(int stu,int exam,int sub,Subject newData)
 
 void Database::deleteStudent(QString id)
 {
-    for(int i=0;i<students.size();i++)
+    for(unsigned int i=0;i<students.size();i++)
     {
         if(students[i].id==id)
         {
@@ -163,7 +163,7 @@ void Database::deleteStudent(QString id)
 
 void Database::deleteExam(QString name)
 {
-    int index = 0;
+    unsigned int index = 0;
     for(;index<exams.count();index++)
     {
         if(exams[index]==name)
@@ -172,7 +172,7 @@ void Database::deleteExam(QString name)
             break;
         }
     }
-    for(int i1=0;i1<students.size();i1++)
+    for(unsigned int i1=0;i1<students.size();i1++)
     {
         students[i1].exams.erase(students[i1].exams.begin()+index);
     }
@@ -180,7 +180,7 @@ void Database::deleteExam(QString name)
 
 void Database::deleteSubject(QString name)
 {
-    int index = 0;
+    unsigned int index = 0;
     for(;index<subjects.count();index++)
     {
         if(subjects[index]==name)
@@ -189,9 +189,9 @@ void Database::deleteSubject(QString name)
             break;
         }
     }
-    for(int i1=0;i1<students.size();i1++)
+    for(unsigned int i1=0;i1<students.size();i1++)
     {
-        for(int i2=0;i2<exams.size();i2++)
+        for(unsigned int i2=0;i2<exams.size();i2++)
         {
             students[i1].exams[i2].subjects.erase(students[i1].exams[i2].subjects.begin()+index);
         }

@@ -46,7 +46,7 @@ Subject text2Sub(QString text,bool *ok)
             newSub.goalRank = 0;
             ok1=true;
         }
-        else if(list1.count()==1&&list2.count()==1)
+        else if(list1.count()==2&&list2.count()==2)
         {
             newSub.setRealScore(text.split(",")[0].split("/")[0].toDouble(&ok2));
             newSub.setGoalScore(text.split(",")[0].split("/")[1].toDouble(&ok3));
@@ -68,36 +68,36 @@ QString sub2Text(Subject *subject)
     }
     else
     {
-    return QString::number(subject->toRealScore())+"/"+
-            QString::number(subject->toGoalScore())+","+
-            QString::number(subject->realRank)+"/"+
-            QString::number(subject->goalRank);
+        return QString::number(subject->toRealScore())+"/"+
+                QString::number(subject->toGoalScore())+","+
+                QString::number(subject->realRank)+"/"+
+                QString::number(subject->goalRank);
     }
 }
 
 void setItemColor(QTableWidgetItem *item,Subject *sub)
 {
-    item->setBackground(QBrush(QColor("#ffffe9")));
+    item->setBackground(QBrush(QColor(255,255,233)));
     if(sub->goalRank==0||sub->goalScore==0)
         return;
     if(sub->goalRank<sub->realRank)
     {
-        item->setBackground(QBrush(QColor("#fff894")));
+        item->setBackground(QBrush(QColor(255,248,148)));
         if(sub->goalScore>sub->realScore)
         {
-            item->setBackground(QBrush(QColor("#ffda7d")));
+            item->setBackground(QBrush(QColor(255,218,125)));
         }
     }
     else if(sub->goalScore>sub->realScore)
     {
-        item->setBackground(QBrush(QColor("#bbffc0")));
+        item->setBackground(QBrush(QColor(187,255,192)));
     }
 }
 
 QStringList getStudentNames(Database *db)
 {
     QStringList names;
-    for(int i=0;i<db->students.size();i++)
+    for(unsigned int i=0;i<db->students.size();i++)
     {
         names<<db->students[i].name;
     }
@@ -120,8 +120,19 @@ void setTableColor(QTableWidget *table)
     {
         for(int i2=0;i2<table->columnCount();i2++)
         {
-            table->item(i1,i2)->setBackground(QBrush(QColor("#ffffe9")));
+            table->item(i1,i2)->setBackground(QBrush(QColor(255,255,233)));
         }
     }
     table->setAlternatingRowColors(true);
+}
+
+void createTableItems(QTableWidget *table)
+{
+    for(int i1=0;i1<table->rowCount();i1++)
+    {
+        for(int i2=0;i2<table->columnCount();i2++)
+        {
+            table->setItem(i1,i2,new QTableWidgetItem());
+        }
+    }
 }
