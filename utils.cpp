@@ -75,22 +75,30 @@ QString sub2Text(Subject *subject)
     }
 }
 
+namespace colors
+{
+    QBrush SSR = QBrush(QColor(200,200,255));
+    QBrush SR = QBrush(QColor(255,255,170));
+    QBrush R = QBrush(QColor(170,255,255));
+    QBrush none = QBrush(QColor(255,255,255));
+}
+
 void setItemColor(QTableWidgetItem *item,Subject *sub)
 {
-    item->setBackground(QBrush(QColor(255,255,233)));
     if(sub->goalRank==0||sub->goalScore==0)
         return;
+    item->setBackground(colors::none);
     if(sub->goalRank<sub->realRank)
     {
-        item->setBackground(QBrush(QColor(255,248,148)));
+        item->setBackground(colors::SR);
         if(sub->goalScore>sub->realScore)
         {
-            item->setBackground(QBrush(QColor(255,218,125)));
+            item->setBackground(colors::SSR);
         }
     }
     else if(sub->goalScore>sub->realScore)
     {
-        item->setBackground(QBrush(QColor(187,255,192)));
+        item->setBackground(colors::R);
     }
 }
 
