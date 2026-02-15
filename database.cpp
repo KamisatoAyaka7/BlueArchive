@@ -16,17 +16,19 @@ bool Database::readStudentData(QString inPath,Student *setStudent)
     QJsonArray examArray = obj["data"].toArray();
     for(unsigned int i1=0;i1<examArray.count();i1++)
     {
-        Exam *newExam = new Exam();
+        Exam newExam;
         QJsonArray subjectArray = examArray[i1].toArray();
         for(unsigned int i2=0;i2<subjectArray.count();i2++)
         {
-            newExam->subjects.push_back(*(new Subject(
+
+            Subject newSub(
                 subjectArray[i2][0].toInt(),
                 subjectArray[i2][1].toInt(),
                 subjectArray[i2][2].toDouble(),
-                subjectArray[i2][3].toDouble())));
+                subjectArray[i2][3].toDouble());
+            newExam.subjects.push_back(newSub);
         }
-        setStudent->exams.push_back(*newExam);
+        setStudent->exams.push_back(newExam);
     }
     return true;
 }
